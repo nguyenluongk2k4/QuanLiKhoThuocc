@@ -179,6 +179,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
           children: [
             // _buildBackButton(),
             // SizedBox(height: 2.h),
+
             _buildLogo(),
             SizedBox(height: 4.h),
             _buildBranding(),

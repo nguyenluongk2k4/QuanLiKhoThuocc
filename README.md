@@ -80,22 +80,9 @@ The theme configuration includes:
 - Input decoration themes
 - Card and dialog themes
 
-## 📱 Responsive Design
-
-The app is built with responsive design using the Sizer package:
-
-```dart
-// Example of responsive sizing
-Container(
-  width: 50.w, // 50% of screen width
-  height: 20.h, // 20% of screen height
-  child: Text('Responsive Container'),
-)
-```
 ## 📦 Deployment
 
 Build the application for production:
-
 ```bash
 # For Android
 flutter build apk --release
@@ -103,10 +90,3 @@ flutter build apk --release
 # For iOS
 flutter build ios --release
 ```
-
-## 🙏 Acknowledgments
-- Built with [Rocket.new](https://rocket.new)
-- Powered by [Flutter](https://flutter.dev) & [Dart](https://dart.dev)
-- Styled with Material Design
-
-Built with ❤️ on Rocket.new
