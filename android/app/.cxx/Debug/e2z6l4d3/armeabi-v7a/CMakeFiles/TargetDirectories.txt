@@ -1,0 +1,2 @@
+F:/Download/pharmastock_manager/pharmastock_manager/android/app/.cxx/Debug/e2z6l4d3/armeabi-v7a/CMakeFiles/edit_cache.dir
+F:/Download/pharmastock_manager/pharmastock_manager/android/app/.cxx/Debug/e2z6l4d3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

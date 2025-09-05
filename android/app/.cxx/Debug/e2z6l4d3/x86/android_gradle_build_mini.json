@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "C:\\Users\\fptshop\\AppData\\Local\\dev\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\fptshop\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "F:\\Download\\pharmastock_manager\\pharmastock_manager\\android\\app\\.cxx\\Debug\\e2z6l4d3\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\fptshop\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "F:\\Download\\pharmastock_manager\\pharmastock_manager\\android\\app\\.cxx\\Debug\\e2z6l4d3\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

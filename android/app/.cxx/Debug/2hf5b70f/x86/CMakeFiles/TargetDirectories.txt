@@ -1,0 +1,2 @@
+F:/Git/QuanLiKhoThuoc/QuanLiKhoThuoc/android/app/.cxx/Debug/2hf5b70f/x86/CMakeFiles/edit_cache.dir
+F:/Git/QuanLiKhoThuoc/QuanLiKhoThuoc/android/app/.cxx/Debug/2hf5b70f/x86/CMakeFiles/rebuild_cache.dir

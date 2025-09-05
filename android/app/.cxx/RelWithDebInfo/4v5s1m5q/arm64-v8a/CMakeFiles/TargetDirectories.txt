@@ -1,0 +1,2 @@
+F:/Download/pharmastock_manager/pharmastock_manager/android/app/.cxx/RelWithDebInfo/4v5s1m5q/arm64-v8a/CMakeFiles/edit_cache.dir
+F:/Download/pharmastock_manager/pharmastock_manager/android/app/.cxx/RelWithDebInfo/4v5s1m5q/arm64-v8a/CMakeFiles/rebuild_cache.dir
