@@ -5,6 +5,7 @@ import '../presentation/qr_code_generation/qr_code_generation.dart';
 import '../presentation/qr_code_scanner/qr_code_scanner.dart';
 import '../presentation/dispensing_dialog/dispensing_dialog.dart';
 import '../presentation/inventory_dashboard/inventory_dashboard.dart';
+import '../presentation/register_screen/register_screen.dart';
 
 class AppRoutes {
   // TODO: Add your routes here
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String qrCodeScanner = '/qr-code-scanner';
   static const String dispensingDialog = '/dispensing-dialog';
   static const String inventoryDashboard = '/inventory-dashboard';
+  static const String register = '/register-screen';
 
   static Map<String, WidgetBuilder> routes = {
     initial: (context) => const SplashScreen(),
@@ -24,6 +26,7 @@ class AppRoutes {
     qrCodeScanner: (context) => const QrCodeScanner(),
     dispensingDialog: (context) => const DispensingDialog(),
     inventoryDashboard: (context) => const InventoryDashboard(),
+    register: (context) => const RegisterScreen(),
     // TODO: Add your other routes here
   };
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pharmastock_manager/core/services/toarst_services.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
@@ -60,6 +61,42 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
     });
   }
 
+  Future<void> _authenticateUser(String email, String password, bool rememberMeCheckbox) async {
+    final authen = Authen();
+
+    if (email.isEmpty || password.isEmpty) {
+      ToastService.show('Vui lòng nhập đầy đủ thông tin đăng nhập.');
+      return;
+    }
+    if (!email.contains('@')) {
+      ToastService.show('Vui lòng nhập địa chỉ email hợp lệ.');
+      return;
+    }
+    if (password.length < 6) {
+      ToastService.show('Mật khẩu phải có ít nhất 6 ký tự.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final success = await authen.signIn(email, password);
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+
+    if (success) {
+      ToastService.show('Đăng nhập thành công! Chào mừng đến với PharmaStock Manager.');
+      Navigator.pushReplacementNamed(context, '/inventory-dashboard');
+    } else {
+      ToastService.show('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
+  }
+
   void _listenToConnectivity() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       setState(() {
@@ -70,7 +107,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
 
   Future<void> _handleGoogleSignIn() async {
     if (!_isConnected) {
-      _showToast('Please check your internet connection and try again.');
+      ToastService.show('Please check your internet connection and try again.');
       return;
     }
 
@@ -85,7 +122,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
       // Provide haptic feedback on success
       HapticFeedback.lightImpact();
 
-      _showToast('Sign in successful! Welcome to PharmaStock Manager.');
+    ToastService.show('Sign in successful! Welcome to PharmaStock Manager.');
 
       // Navigate to inventory dashboard with fade transition
     await Future.delayed(const Duration(seconds: 1)); // Changed to 1 second for a smoother transition
@@ -116,20 +153,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
       errorMessage = 'Google services are currently unavailable.';
     }
 
-    _showToast(errorMessage);
-  }
-
-  void _showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 3,
-      backgroundColor:
-          AppTheme.lightTheme.colorScheme.onSurface.withValues(alpha: 0.9),
-      textColor: AppTheme.lightTheme.colorScheme.surface,
-      fontSize: 14.sp,
-    );
+    ToastService.show(errorMessage);
   }
 
   void _handleBackButton() {
@@ -292,7 +316,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  labelText: "Email",
+                  labelText: "Địa chỉ email",
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(2.w),
@@ -324,7 +348,11 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      // TODO: xử lý đăng nhập
+                      _authenticateUser(
+                        emailController.text.trim(),
+                        passwordController.text,
+                        rememberMe,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -335,7 +363,29 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Chưa có tài khoản ?"),
+                  SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/register-screen');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: AppTheme.lightTheme.colorScheme.primary,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2.w),
+                      ),
+                    ),
+                    child: Text("Đăng kí ngay"),
 
+                  ),
+                ],
+              ),
             ],
           ),
         );

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
@@ -14,6 +17,16 @@ void main() async {
       errorDetails: details,
     );
   };
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final envString = await rootBundle.loadString('assets/env.json');
+  final Map<String, dynamic> env = json.decode(envString);
+
+  await Supabase.initialize(
+    url: env['SUPABASE_URL'] as String,
+    anonKey: env['SUPABASE_ANON_KEY'] as String,
+    // tùy chọn khác nếu cần
+  );
   // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
