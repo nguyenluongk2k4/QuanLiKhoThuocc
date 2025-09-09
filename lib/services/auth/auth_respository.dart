@@ -1,9 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../models/users.dart';
+import '../../services/supabase_service.dart';
 
 class Authen {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  SupabaseClient get _supabase => SupabaseService.instance.client;
 
   Future<bool> signIn(String email, String password) async {
     try {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pharmastock_manager/core/services/toarst_services.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
 
-import '../../dio/authen/authencate.dart';
+import '../../core/toarst_services.dart';
+import '../../services/auth/auth_respository.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

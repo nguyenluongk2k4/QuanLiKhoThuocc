@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmastock_manager/services/supabase_service.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
+import '../models/users.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +19,17 @@ void main() async {
       errorDetails: details,
     );
   };
-  WidgetsFlutterBinding.ensureInitialized();
 
-  final envString = await rootBundle.loadString('assets/env.json');
-  final Map<String, dynamic> env = json.decode(envString);
+  // Initialize Supabase once using the singleton service.
+  // Assumption: env asset is at assets/env.json (update if different).
+  await SupabaseService.instance.initFromAsset(assetPath: 'assets/env.json');
 
-  await Supabase.initialize(
-    url: env['SUPABASE_URL'] as String,
-    anonKey: env['SUPABASE_ANON_KEY'] as String,
-    // tùy chọn khác nếu cần
-  );
+  // Initialize Hive and register adapters for local storage.
+  // Assumption: UsersAdapter is generated via build_runner (users.g.dart).
+  await Hive.initFlutter();
+  Hive.registerAdapter(UsersAdapter());
+  await Hive.openBox<Users>('users_box');
+
   // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
