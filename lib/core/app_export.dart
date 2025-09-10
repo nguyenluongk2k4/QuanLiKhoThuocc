@@ -7,4 +7,3 @@ export '../services/auth/auth_respository.dart';
 export '../models/users.dart';
 export '../core/providers/user_provider.dart';
 export '../services/supabase_service.dart';
-export '../services/base_service.dart';

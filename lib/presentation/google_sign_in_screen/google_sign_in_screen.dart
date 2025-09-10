@@ -62,7 +62,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
   }
 
   Future<void> _authenticateUser(String email, String password, bool rememberMeCheckbox) async {
-    final authen = Authen();
+    final authen = AuthRepository();
 
     if (email.isEmpty || password.isEmpty) {
       ToastService.show('Vui lòng nhập đầy đủ thông tin đăng nhập.');

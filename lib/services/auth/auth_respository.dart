@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/users.dart';
 import '../../services/supabase_service.dart';
 
-class Authen {
+class AuthRepository {
   SupabaseClient get _supabase => SupabaseService.instance.client;
 
   Future<bool> signIn(String email, String password) async {
@@ -24,10 +24,6 @@ class Authen {
       final response = await _supabase.auth.signUp(
         email: user.email,
         password: password,
-        phone: user.phone,
-        data:{
-          'fullname': user.fullName,
-        }
       );
 
       return response.user != null;

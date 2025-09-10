@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pharmastock_manager/services/user/user_responsitory.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import '../../core/app_export.dart';
 
 import '../../core/toarst_services.dart';
@@ -19,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
 
+  String _fullPhoneNumber = ''; // Lưu số điện thoại ở định dạng E.164
   bool _isLoading = false;
 
   // password criteria
@@ -60,13 +63,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _register() async {
     final name = _nameController.text.trim();
-    final phone = _phoneController.text.trim();
+    final phone = _fullPhoneNumber.trim(); // Sử dụng số điện thoại E.164
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     final confirm = _confirmController.text;
 
     if (name.isEmpty || phone.isEmpty || email.isEmpty || password.isEmpty || confirm.isEmpty) {
       ToastService.show("Vui lòng điền đủ thông tin");
+      return;
+    }
+
+    // Kiểm tra số điện thoại Việt Nam
+    if (phone.startsWith('+84') && phone.length != 13) { // +84 + 10 số = 13 ký tự
+      ToastService.show("Số điện thoại Việt Nam phải có đúng 10 số");
       return;
     }
 
@@ -82,16 +91,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => _isLoading = true);
 
-    final authen = Authen();
-    Users user = new Users(email: email, phone: phone, fullName: name, createdAt: DateTime.now(), updatedAt: DateTime.now(), emailConfirmed: false);
+    final authen = AuthRepository();
+    final userRe = UserResponsitory();
+    Users user = new Users(email: email, phone: phone, fullName: name, createdAt: DateTime.now(), updatedAt: DateTime.now(), emailConfirmed: true);
     final success = await authen.signUp(user, password);
-
+    final updateSuccess = await userRe.updateUser(user);
     setState(() => _isLoading = false);
 
-    if (success) {
+    if (success && updateSuccess) {
       ToastService.show('Đăng ký thành công. Kiểm tra email để xác nhận.');
       Navigator.pushReplacementNamed(context, AppRoutes.googleSignIn);
-    } else {
+    }
+    else if(!updateSuccess){
+      ToastService.show('Thêm thông tin thất bại. Vui lòng thử lại.');
+      Navigator.pushReplacementNamed(context, AppRoutes.googleSignIn);
+    }
+    else {
       ToastService.show('Đăng ký thất bại. Vui lòng thử lại.');
     }
   }
@@ -131,10 +146,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: const InputDecoration(labelText: 'Họ tên'),
             ),
             SizedBox(height: 2.h),
-            TextField(
+            IntlPhoneField(
               controller: _phoneController,
-              decoration: const InputDecoration(labelText: 'Số điện thoại'),
-              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(
+                labelText: 'Số điện thoại',
+                border: OutlineInputBorder(),
+                hintText: 'Nhập 10 số (ví dụ: 0987654321)',
+              ),
+              initialCountryCode: 'VN', // Mặc định Việt Nam
+              validator: (phone) {
+                if (phone?.countryCode == '+84') {
+                  // Kiểm tra số điện thoại Việt Nam: đúng 10 số
+                  if (phone!.number.length != 10) {
+                    return 'Số điện thoại Việt Nam phải có đúng 10 số';
+                  }
+                  // Kiểm tra đầu số hợp lệ (03, 05, 07, 08, 09)
+                  final firstTwoDigits = phone.number.substring(0, 2);
+                  if (!['03', '05', '07', '08', '09'].contains(firstTwoDigits)) {
+                    return 'Đầu số không hợp lệ (phải bắt đầu bằng 03, 05, 07, 08, 09)';
+                  }
+                }
+                return null;
+              },
+              onChanged: (phone) {
+                _fullPhoneNumber = phone.completeNumber; // Lưu số E.164
+              },
+              onCountryChanged: (country) {
+                // Reset số điện thoại khi đổi quốc gia
+                _phoneController.clear();
+                _fullPhoneNumber = '';
+                print('Đã chọn quốc gia: ${country.name}');
+              },
             ),
             SizedBox(height: 2.h),
             TextField(
